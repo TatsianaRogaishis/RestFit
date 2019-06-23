@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+targetNamespace="http://localhost:8080/soap" 
+xmlns:tns="http://localhost:8080/soap" elementFormDefault="qualified">
+
+  <xs:element name="getUserFitDataByLoginRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name= "login" type="xs:string"/>
+      </xs:sequence>  
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserFitDataByLoginResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name= "userFitDatas" type="tns:userFitDatas" maxOccurs="unbounded"/>
+      </xs:sequence>  
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="userFitDatas">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int"/>
+      <xs:element name="distance" type="xs:double"/>
+      <xs:element name="run_time" type="xs:int"/>
+      <xs:element name="race_date" type="xs:date"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="getUserFitDatasRequest">
+        <xs:complexType/>
+    </xs:element>    
+    <xs:element name="getUserFitDatasResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userFitDatas" type="tns:userFitDatas" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>   
+  
+    <xs:element name="addUserFitDataRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="distance" type="xs:double"/>
+                <xs:element name="run_time" type="xs:int"/>
+      			<xs:element name="race_date" type="xs:date"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addUserFitDataResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>            
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+  	<xs:complexType name="serviceStatus">
+        <xs:sequence>
+            <xs:element name="statusCode" type="xs:string"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>  
+</xs:schema>

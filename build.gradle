@@ -1,0 +1,88 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.4.RELEASE")
+        classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.5'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'application'
+    id 'com.gradle.build-scan' version '2.0.2'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+    id "com.github.honourednihilist.gradle-postgresql-embedded" version "0.4.0"
+}
+
+apply plugin: 'com.github.jacobono.jaxb'
+
+mainClassName = 'com.restfit.RestFitApp'
+
+jar {
+	baseName = 'RestFitApp'
+	version = '0.0.1'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	
+	compile(group: 'org.postgresql', name: 'postgresql', version: '42.0.0')
+	compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.0.3.RELEASE'
+	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity4', version: '2.1.2.RELEASE'
+	compile group: 'org.webjars', name: 'bootstrap', version: '3.2.0'
+	compile group: 'org.webjars', name: 'jquery', version: '3.2.0'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.5.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.5.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.6.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.1.6.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.6.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.1.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-context', version: '5.1.8.RELEASE'
+	compile group: 'org.springframework', name: 'spring-beans', version: '5.1.8.RELEASE'
+	compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.8.RELEASE'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.21'
+	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+	compile group: 'org.springframework', name: 'spring-webmvc', version: '5.1.8.RELEASE'
+	compile group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.3.2'
+	compile group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.3.2'
+	compile group: 'org.springframework.ws', name: 'spring-ws-core', version: '3.0.7.RELEASE'
+	compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
+    jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
+    jaxb 'javax.xml.bind:jaxb-api:2.2.7'
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.6.5"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:0.6.4"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-annotate:0.6.4"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-value-constructor:3.0"
+}
+
+jaxb {
+
+    System.setProperty('javax.xml.accessExternalSchema', 'all') //To solve external schema dependencies
+    xsdDir = "src/main/resources/" //xsd directory
+    xjc {
+        taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task" // This is for setter plugin
+        args = ["-Xsetters","-Xsetters-mode=direct"]
+    }
+}
+
+postgresEmbedded {
+    port = 5432
+}
+
+gradle.buildFinished {
+    println("\nFinished: " + new Date())
+}

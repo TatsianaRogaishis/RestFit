@@ -1,0 +1,54 @@
+CREATE TABLE public.role
+(
+    id numeric NOT NULL,
+    name character varying(255),
+    PRIMARY KEY (id)
+)
+
+
+CREATE TABLE public.userfit
+(
+    id numeric NOT NULL,
+    login character varying(255) UNIQUE,
+    password character varying(255),
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+	
+	
+CREATE TABLE public.usersfit_roles
+(
+    user_id numeric NOT NULL,
+	role_id numeric NOT NULL,
+	PRIMARY KEY (user_id, role_id),
+	CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+      REFERENCES role (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+      REFERENCES userfit (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+CREATE TABLE public.usersfit_data
+(
+    id numeric NOT NULL,
+	distance numeric NOT NULL,
+	run_time integer NOT NULL,
+	race_date date NOT NULL,
+	userfit_id numeric NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT data_user_id_fkey FOREIGN KEY (userfit_id)
+      REFERENCES userfit (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+CREATE OR REPLACE VIEW UserFitReport AS
+select avgdistance, sumdistance, week, avgruntime, round(avgdistance/avgruntime, 2) avgspeed, userfit_id from (
+select round(avg(distance),2) as avgdistance, sum(distance) as sumdistance, 
+	to_char(race_date, 'IYYY-IW') as week, round(avg(run_time), 2) as avgruntime, userfit_id
+from userfit_data 
+where userfit_id=3
+group by to_char(race_date, 'IYYY-IW'), userfit_id
+	) a;
